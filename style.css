@@ -1,0 +1,19 @@
+figure {
+    cursor: pointer;
+}
+.card {
+    text-align: center;
+    border: grey solid 1px;
+    padding: 1rem;
+    width: 20rem;
+    height: 35rem;
+    display: inline-grid;
+    margin: 1rem 2rem;
+    box-shadow: 3px 4px #e04b52
+  }
+
+  .image {
+    justify-self: center;
+    height: 25rem;
+    width: auto;
+  }
