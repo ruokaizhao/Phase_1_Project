@@ -60,19 +60,26 @@ document.addEventListener('DOMContentLoaded', () => {
     //movies will be shown. I was putting phaseList outside of the event listener,
     //which cause the phaseList array not resetting, and data got piled up,
     //which result in not filtering the correct movies.
-    
+
 document.querySelector('select').addEventListener('change', (change) => {
     const phaseList = [];
     const section = document.querySelector('section');
-    movieList.forEach((e) => {
-        if (e.phase === parseInt(change.target.value)) {
-            phaseList.push(e)
-        }
-    });
-    section.textContent = '';
-    phaseList.forEach((e) => {
-        renderData(e);
-    });
+    if (change.target.value === '') {
+        section.textContent = '';
+        movieList.forEach((e) => {
+            renderData(e);
+        })       
+    } else {
+        movieList.forEach((e) => {
+            if (e.phase === parseInt(change.target.value)) {
+                phaseList.push(e)
+            }
+        });
+        section.textContent = '';
+        phaseList.forEach((e) => {
+            renderData(e);
+        });
+    }    
 })
 
 
