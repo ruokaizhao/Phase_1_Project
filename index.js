@@ -57,9 +57,11 @@ function renderData(data) {
     const boxOffice = document.createElement('p');
     if (data['box_office'] === '0') {
         boxOffice.textContent = 'Box office: Not yet released'
-    } else {
-        boxOffice.textContent = `Box office: ${data['box_office']}`;
-    }    
+    } else if (data['box_office'] < 1.0e+9) {
+        boxOffice.textContent = `Box office: $${Math.floor(data['box_office']/1.0e+6)} million`;
+      } else {
+        boxOffice.textContent = `Box office: $${Math.floor(data['box_office']/1.0e+9*100)/100} billion`;        
+        }  
     const releaseDate = document.createElement('p');
     releaseDate.textContent = `Release date: ${data['release_date']}`;
     figure.appendChild(imageHolder);
