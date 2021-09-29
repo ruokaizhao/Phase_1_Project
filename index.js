@@ -6,6 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     //The incoming data is an Object with only one key/value pair,
     //the key is 'data', and value is an array of Objects.
     //So here e would be one element of the array which is an Object.
+        fetch('http://localhost:3000/data', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', 
+                Accept: 'application/json'
+            },
+            body: JSON.stringify(json)
+        })
         json.data.forEach((e) => {
             if (e.phase === null) {
     //There are some movies which have no accurate data, so I will be
