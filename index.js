@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     //the key is 'data', and value is an array of Objects.
 
     //POST the data retrieved from remote API to json-server
+
+    //Add two buttons to manually retrieve and render data so that
+    //the data is not written to the database every time the user
+    //refreshes the page, those buttons will disappear after clicking.
+
             fetch('http://localhost:3000/data', {
                 method: 'POST',
                 headers: {
@@ -51,18 +56,22 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
         
-
-document.querySelector('select#select').addEventListener('change', (change) => {
+    //Add event listener so that when a user choose a phase, the corresponding
+    //movies will be shown. I was putting phaseList outside of the event listener,
+    //which cause the phaseList array not resetting, and data got piled up,
+    //which result in not filtering the correct movies.
+    
+document.querySelector('select').addEventListener('change', (change) => {
     const phaseList = [];
-    const figure = document.querySelector('figure');
+    const section = document.querySelector('section');
     movieList.forEach((e) => {
         if (e.phase === parseInt(change.target.value)) {
             phaseList.push(e)
         }
     });
-    figure.textContent = '';
+    section.textContent = '';
     phaseList.forEach((e) => {
-        renderData(phaseList);
+        renderData(e);
     });
 })
 
