@@ -1,6 +1,7 @@
 const movieList = [];
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('#retrieve').addEventListener('click', () => {
+    const retrieve = document.querySelector('#retrieve');
+    retrieve.addEventListener('click', () => {
         fetch('https://mcuapi.herokuapp.com/api/v1/movies')
         .then((resp) => resp.json())        
         .then((json) => {
@@ -16,9 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 body: JSON.stringify(json.data)
             })
-            .then(() => {
-
-            })
+            retrieve.style.display = 'none';            
         })
     })
     
@@ -32,11 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
     //maybe it's just the code is telling me that "cannot retrieve some 
     //data from remote API.
 
-    document.querySelector('#render').addEventListener('click', () => {
+    const render = document.querySelector('#render');
+    render.addEventListener('click', () => {
         fetch('http://localhost:3000/data')
         .then((resp) => resp.json())
         .then((json) => {
-            console.log(json)
             json[0].forEach((e) => {
                 if (e.phase === null) {
                 } else {
@@ -45,8 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             movieList.forEach((e) => {
                 renderData(e);
-        });
-        
+        })
+        render.style.display = 'none';        
         });
     });
 })
