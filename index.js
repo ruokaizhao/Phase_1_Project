@@ -143,4 +143,15 @@ function renderData(data) {
     details.textContent = data.overview;
     details.appendChild(summary);
     figure.appendChild(details);
+
+    const trailer = document.createElement('button')
+    figure.appendChild(trailer)
+    trailer.textContent = 'Play trailer';
+    trailer.addEventListener('click', () => {
+        const iframe = document.createElement('iframe');
+        iframe.src = data['trailer_url'];
+        iframe.allowFullscreen;
+        iframe.frameborder = 0
+        figure.appendChild(iframe);
+    })
 }
