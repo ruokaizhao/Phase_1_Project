@@ -1,5 +1,34 @@
 const movieList = [];
+
+//Render the page using data from the json-server
+
 document.addEventListener('DOMContentLoaded', () => {
+    fetch('http://localhost:3000/data/')
+        .then((resp) => resp.json())
+        .then((json) => {
+            json[0].forEach((e) => {
+                if (e.phase === null) {
+                } else {
+                    movieList.push(e);
+                };
+            });
+            movieList.forEach((e) => {
+                renderData(e);
+            })     
+        });
+        
+    //The incoming data is an Object with only one key/value pair,
+    //the key is 'data', and value is an array of Objects.
+
+    //Reset the json-server to empty and POST the data retrieved from
+    //remote API to json-server so that the data is not duplicately added
+    //to the database.
+
+    //Add a button to manually reset database and retrieve and POST data
+    //to the database.
+
+    const retrieve = document.querySelector('#reset');
+    retrieve.addEventListener('click', () => {
         fetch(`http://localhost:3000/data/1`, {
             method: 'DELETE',
             headers: {
@@ -7,32 +36,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 Accept: 'application/json'
             }
         })
-    
-    const retrieve = document.querySelector('#retrieve');
-    retrieve.addEventListener('click', () => {
-        fetch('https://mcuapi.herokuapp.com/api/v1/movies')
-        .then((resp) => resp.json())        
-        .then((json) => {
-    //The incoming data is an Object with only one key/value pair,
-    //the key is 'data', and value is an array of Objects.
-
-    //POST the data retrieved from remote API to json-server
-
-    //Add two buttons to manually retrieve and render data so that
-    //the data is not written to the database every time the user
-    //refreshes the page, those buttons will disappear after clicking.
-
-            fetch('http://localhost:3000/data', {
-                method: 'POST',
-                headers: {
+        .then(() => {
+            fetch('https://mcuapi.herokuapp.com/api/v1/movies')
+            .then((resp) => resp.json())        
+            .then((json) => {
+                fetch('http://localhost:3000/data', {
+                    method: 'POST',
+                    headers: {
                     'Content-Type': 'application/json', 
                     Accept: 'application/json'
-                },
+                    },
                 body: JSON.stringify(json.data)
+                })           
             })
-            retrieve.style.display = 'none';            
         })
     })
+})
     
     
 
@@ -44,24 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //maybe it's just the code is telling me that "cannot retrieve some 
     //data from remote API.
 
-    const render = document.querySelector('#render');
-    render.addEventListener('click', () => {
-        fetch('http://localhost:3000/data/')
-        .then((resp) => resp.json())
-        .then((json) => {
-            json[0].forEach((e) => {
-                if (e.phase === null) {
-                } else {
-                    movieList.push(e);
-                };
-            });
-            movieList.forEach((e) => {
-                renderData(e);
-        })
-        render.style.display = 'none';        
-        });
-    });
-})
+
 
         
     //Add event listener so that when a user choose a phase, the corresponding
