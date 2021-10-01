@@ -1,6 +1,24 @@
 const movieList = [];
 
-//Render the page using data from the json-server
+    //Render the page using data from the json-server
+
+    //There are some movies which have no accurate data, so I will be
+    //better off exclude those movies to make the page look nice.
+    //Also, without removing those data, I will get 
+    //"GET file://wsl%24/Ubuntu/home/ruokai/Development/my-projects/phase-1-project/null 
+    //net::ERR_FILE_NOT_FOUND" error message, don't know the reason,
+    //maybe it's just the code is telling me that "cannot retrieve some 
+    //data from remote API.
+
+    //The incoming data is an Object with only one key/value pair,
+    //the key is 'data', and value is an array of Objects.
+
+    //Reset the json-server to empty and POST the data retrieved from
+    //remote API to json-server so that the data is not duplicately added
+    //to the database.
+
+    //Add a button to manually reset database and retrieve and POST data
+    //to the database.
 
 document.addEventListener('DOMContentLoaded', () => {
     fetch('http://localhost:3000/data/')
@@ -16,20 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderData(e);
             })     
         });
-        
-    //The incoming data is an Object with only one key/value pair,
-    //the key is 'data', and value is an array of Objects.
-
-    //Reset the json-server to empty and POST the data retrieved from
-    //remote API to json-server so that the data is not duplicately added
-    //to the database.
-
-    //Add a button to manually reset database and retrieve and POST data
-    //to the database.
-
-    const retrieve = document.querySelector('#reset');
-    retrieve.addEventListener('click', () => {
-        fetch(`http://localhost:3000/data/1`, {
+    const reset = document.querySelector('#reset');
+    reset.addEventListener('click', () => {
+        fetch('http://localhost:3000/data/1', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json', 
@@ -52,20 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
     })
 })
-    
-    
 
-    //There are some movies which have no accurate data, so I will be
-    //better off exclude those movies to make the page look nice.
-    //Also, without removing those data, I will get 
-    //"GET file://wsl%24/Ubuntu/home/ruokai/Development/my-projects/phase-1-project/null 
-    //net::ERR_FILE_NOT_FOUND" error message, don't know the reason,
-    //maybe it's just the code is telling me that "cannot retrieve some 
-    //data from remote API.
-
-
-
-        
     //Add event listener so that when a user choose a phase, the corresponding
     //movies will be shown. I was putting phaseList outside of the event listener,
     //which cause the phaseList array not resetting, and data got piled up,
@@ -92,7 +86,6 @@ document.querySelector('select').addEventListener('change', (change) => {
     }    
 })
 
-
     //If you define the section in the above code block, instead of hard
     //coding it into index.html, somehow, you cannot call section here.
     //So for now, you better hard code the basic structure of html in
@@ -112,18 +105,35 @@ function renderData(data) {
     const boxOffice = document.createElement('p');
     if (data['box_office'] === '0') {
         boxOffice.textContent = 'Box office: Not yet released'
-    } else if (data['box_office'] < 1.0e+9) {
-        boxOffice.textContent = `Box office: $${Math.floor(data['box_office']/1.0e+6)} million`;
+    } else if (parseInt(data['box_office']) < 1.0e+9) {
+        boxOffice.textContent = `Box office: $${Math.floor(parseInt(data['box_office'])/1.0e+6)} million`;
       } else {
-        boxOffice.textContent = `Box office: $${Math.floor(data['box_office']/1.0e+9*100)/100} billion`;        
+        boxOffice.textContent = `Box office: $${Math.floor(parseInt(data['box_office'])/1.0e+9*100)/100} billion`;        
         }  
     const releaseDate = document.createElement('p');
     releaseDate.textContent = `Release date: ${data['release_date']}`;
     figure.appendChild(imageHolder);
     figure.appendChild(title);
-    figure.addEventListener('click', (e) => {
-        figure.textContent = data.overview;
-    });
+    const increaseBoxOffice = document.createElement('button');
+    increaseBoxOffice.textContent = 'Increase box office by 10 million'
+    figure.appendChild(increaseBoxOffice);
+    increaseBoxOffice.addEventListener('click', (e) => {
+        if (data['box_office'] === '0') {
+            alert('Movie not yet released');
+        } else {
+            data['box_office'] = parseInt(data['box_office']) + 1.0e+7;
+        }
+        if (data['box_office'] === '0') {
+            boxOffice.textContent = 'Box office: Not yet released'
+        } else if (parseInt(data['box_office']) < 1.0e+9) {
+            boxOffice.textContent = `Box office: $${Math.floor(parseInt(data['box_office'])/1.0e+6)} million`;
+          } else {
+            boxOffice.textContent = `Box office: $${Math.floor(parseInt(data['box_office'])/1.0e+9*100)/100} billion`;        
+            }         
+    })
+    // figure.addEventListener('click', (e) => {
+    //     figure.textContent = data.overview;
+    // });
     figure.appendChild(boxOffice);
     figure.appendChild(releaseDate);            
 }
