@@ -5,15 +5,36 @@ figure {
     text-align: center;
     border: grey solid 1px;
     padding: 1rem;
-    width: 20rem;
-    height: 35rem;
+    width: 25rem;
+    /* height: 40rem; */
     display: inline-grid;
     margin: 1rem 2rem;
-    box-shadow: 3px 4px #e04b52
-  }
+    box-shadow: 3px 4px #e04b52;
+    /* position: relative; */
+    /* overflow: hidden; */
+}
 
-  .image {
-    justify-self: center;
-    height: 25rem;
-    width: auto;
-  }
+.image {
+justify-self: center;
+height: 25rem;
+width: auto;
+}
+
+.btn {
+    cursor: pointer;
+    background-color: #8ad303;
+    border: none;
+    color: white;
+    padding: 2px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    transition-duration: 0.4s;
+}
+
+.btn:hover {
+    background-color: green;
+    color: white;
+}

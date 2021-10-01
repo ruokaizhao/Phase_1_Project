@@ -65,26 +65,28 @@ document.addEventListener('DOMContentLoaded', () => {
     //which cause the phaseList array not resetting, and data got piled up,
     //which result in not filtering the correct movies.
 
-document.querySelector('select').addEventListener('change', (change) => {
-    const phaseList = [];
-    const section = document.querySelector('section');
-    if (change.target.value === '') {
-        section.textContent = '';
-        movieList.forEach((e) => {
-            renderData(e);
-        })       
-    } else {
-        movieList.forEach((e) => {
-            if (e.phase === parseInt(change.target.value)) {
-                phaseList.push(e)
-            }
-        });
-        section.textContent = '';
-        phaseList.forEach((e) => {
-            renderData(e);
-        });
-    }    
-})
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('select').addEventListener('change', (change) => {
+        const phaseList = [];
+        const section = document.querySelector('section');
+        if (change.target.value === '') {
+            section.textContent = '';
+            movieList.forEach((e) => {
+                renderData(e);
+            })       
+        } else {
+            movieList.forEach((e) => {
+                if (e.phase === parseInt(change.target.value)) {
+                    phaseList.push(e)
+                }
+            });
+            section.textContent = '';
+            phaseList.forEach((e) => {
+                renderData(e);
+            });
+        }    
+    })
+}) 
 
     //If you define the section in the above code block, instead of hard
     //coding it into index.html, somehow, you cannot call section here.
@@ -94,7 +96,7 @@ document.querySelector('select').addEventListener('change', (change) => {
 function renderData(data) {
     const section = document.querySelector('section');
     const figure = document.createElement('figure');
-    figure.className = data.phase;
+    figure.className = 'container-fluid';
     section.appendChild(figure);
     const imageHolder = document.createElement('img');
     imageHolder.src = data['cover_url'];
@@ -115,8 +117,8 @@ function renderData(data) {
     figure.appendChild(imageHolder);
     figure.appendChild(title);
     const increaseBoxOffice = document.createElement('button');
+    increaseBoxOffice.className = 'btn btn-info'
     increaseBoxOffice.textContent = 'Increase box office by 10 million'
-    figure.appendChild(increaseBoxOffice);
     increaseBoxOffice.addEventListener('click', (e) => {
         if (data['box_office'] === '0') {
             alert('Movie not yet released');
@@ -131,9 +133,14 @@ function renderData(data) {
             boxOffice.textContent = `Box office: $${Math.floor(parseInt(data['box_office'])/1.0e+9*100)/100} billion`;        
             }         
     })
-    // figure.addEventListener('click', (e) => {
-    //     figure.textContent = data.overview;
-    // });
     figure.appendChild(boxOffice);
-    figure.appendChild(releaseDate);            
+    figure.appendChild(releaseDate);
+    figure.appendChild(increaseBoxOffice);    
+    
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
+    summary.textContent = 'Storyline';
+    details.textContent = data.overview;
+    details.appendChild(summary);
+    figure.appendChild(details);
 }
