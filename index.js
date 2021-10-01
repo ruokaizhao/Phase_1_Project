@@ -148,10 +148,16 @@ function renderData(data) {
     figure.appendChild(trailer)
     trailer.textContent = 'Play trailer';
     trailer.addEventListener('click', () => {
-        const iframe = document.createElement('iframe');
-        iframe.src = data['trailer_url'];
-        iframe.allowFullscreen;
-        iframe.frameborder = 0
-        figure.appendChild(iframe);
-    })
+        if (document.querySelector('iframe')) {
+            document.querySelector('iframe').remove();
+        } else {        
+            const iframe = document.createElement('iframe');
+            iframe.src = data['trailer_url'];
+            iframe.width = 400;
+            iframe.height = 170
+            iframe.allowFullscreen = true;
+            iframe.frameborder = 0;
+            figure.appendChild(iframe);
+        };                
+    });
 }
