@@ -1,5 +1,13 @@
 const movieList = [];
 document.addEventListener('DOMContentLoaded', () => {
+        fetch(`http://localhost:3000/data/1`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json', 
+                Accept: 'application/json'
+            }
+        })
+    
     const retrieve = document.querySelector('#retrieve');
     retrieve.addEventListener('click', () => {
         fetch('https://mcuapi.herokuapp.com/api/v1/movies')
@@ -38,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const render = document.querySelector('#render');
     render.addEventListener('click', () => {
-        fetch('http://localhost:3000/data')
+        fetch('http://localhost:3000/data/')
         .then((resp) => resp.json())
         .then((json) => {
             json[0].forEach((e) => {
