@@ -38,3 +38,22 @@ width: auto;
     background-color: green;
     color: white;
 }
+
+.btn1 {
+    cursor: pointer;
+    background-color: pink;
+    border: none;
+    color: black;
+    padding: 0px 0px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    transition-duration: 0.4s;
+}
+
+.btn1:hover {
+    background-color: orange;
+    color: white;
+}

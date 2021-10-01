@@ -117,7 +117,7 @@ function renderData(data) {
     figure.appendChild(imageHolder);
     figure.appendChild(title);
     const increaseBoxOffice = document.createElement('button');
-    increaseBoxOffice.className = 'btn btn-info'
+    increaseBoxOffice.className = 'btn'
     increaseBoxOffice.textContent = 'Increase box office by 10 million'
     increaseBoxOffice.addEventListener('click', (e) => {
         if (data['box_office'] === '0') {
@@ -140,18 +140,21 @@ function renderData(data) {
     const details = document.createElement('details');
     const summary = document.createElement('summary');
     summary.textContent = 'Storyline';
+    summary.className = '';
     details.textContent = data.overview;
     details.appendChild(summary);
     figure.appendChild(details);
 
     const trailer = document.createElement('button')
+    trailer.className = 'btn1';
     figure.appendChild(trailer)
     trailer.textContent = 'Play trailer';
     trailer.addEventListener('click', () => {
-        if (document.querySelector('iframe')) {
-            document.querySelector('iframe').remove();
+        if (document.querySelector(`#${data['imdb_id']}`)) {
+            document.querySelector(`#${data['imdb_id']}`).remove();
         } else {        
             const iframe = document.createElement('iframe');
+            iframe.id = data['imdb_id'];
             iframe.src = data['trailer_url'];
             iframe.width = 400;
             iframe.height = 170
