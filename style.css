@@ -1,7 +1,4 @@
-/* figure {
-    cursor: pointer;
-} */
-figure {
+.container {
     text-align: center;
     border: grey solid 1px;
     padding: 1rem;
@@ -22,7 +19,7 @@ width: auto;
 
 .btn {
     cursor: pointer;
-    background-color: #8ad303;
+    background-color: grey;
     border: none;
     color: white;
     padding: 2px 5px;
@@ -40,11 +37,16 @@ width: auto;
 }
 
 .btn1 {
+    text-align: center;
+}
+
+.btn2 {
+    text-align: center;
     cursor: pointer;
-    background-color: pink;
-    border: none;
+    background-color: white;
+    border: 3px solid white;
     color: black;
-    padding: 0px 0px;
+    padding: 2px 5px;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -53,7 +55,7 @@ width: auto;
     transition-duration: 0.4s;
 }
 
-.btn1:hover {
-    background-color: orange;
+.btn2:hover {
+    background-color: grey;
     color: white;
 }

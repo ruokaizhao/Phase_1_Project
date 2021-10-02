@@ -1,5 +1,3 @@
-const movieList = [];
-
     //Render the page using data from the json-server
 
     //There are some movies which have no accurate data, so I will be
@@ -20,45 +18,41 @@ const movieList = [];
     //Add a button to manually reset database and retrieve and POST data
     //to the database.
 
+const movieList = [];
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('http://localhost:3000/data/')
-        .then((resp) => resp.json())
+    fetch('http://localhost:3000/data')
+        .then((resp) => resp.json())        
         .then((json) => {
-            json[0].forEach((e) => {
-                if (e.phase === null) {
-                } else {
-                    movieList.push(e);
-                };
-            });
-            movieList.forEach((e) => {
-                renderData(e);
-            })     
-        });
-    const reset = document.querySelector('#reset');
-    reset.addEventListener('click', () => {
-        fetch('http://localhost:3000/data/1', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json', 
-                Accept: 'application/json'
+            if (json.length === 0) {
+                fetch('https://mcuapi.herokuapp.com/api/v1/movies')
+                .then((resp) => resp.json())        
+                .then((json) => {
+                    fetch('http://localhost:3000/data', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json', 
+                        Accept: 'application/json'
+                        },
+                        body: JSON.stringify(json.data)
+                    })           
+                })              
             }
         })
-        .then(() => {
-            fetch('https://mcuapi.herokuapp.com/api/v1/movies')
-            .then((resp) => resp.json())        
-            .then((json) => {
-                fetch('http://localhost:3000/data', {
-                    method: 'POST',
-                    headers: {
-                    'Content-Type': 'application/json', 
-                    Accept: 'application/json'
-                    },
-                body: JSON.stringify(json.data)
-                })           
-            })
-        })
-    })
+        setTimeout(function() {
+            initialize();    
+            const reset = document.querySelector('#reset');
+            reset.addEventListener('click', () => {
+                resetDatabase();
+            })          
+        }, 2000)           
 })
+
+document.addEventListener('DOMContentLoaded', () => {    
+    const empty = document.querySelector('#empty');
+    empty.addEventListener('click', () => {
+        emptyDatabase();
+    })
+})   
 
     //Add event listener so that when a user choose a phase, the corresponding
     //movies will be shown. I was putting phaseList outside of the event listener,
@@ -66,26 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //which result in not filtering the correct movies.
 
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('select').addEventListener('change', (change) => {
-        const phaseList = [];
-        const section = document.querySelector('section');
-        if (change.target.value === '') {
-            section.textContent = '';
-            movieList.forEach((e) => {
-                renderData(e);
-            })       
-        } else {
-            movieList.forEach((e) => {
-                if (e.phase === parseInt(change.target.value)) {
-                    phaseList.push(e)
-                }
-            });
-            section.textContent = '';
-            phaseList.forEach((e) => {
-                renderData(e);
-            });
-        }    
-    })
+    handleDropdown();
 }) 
 
     //If you define the section in the above code block, instead of hard
@@ -96,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderData(data) {
     const section = document.querySelector('section');
     const figure = document.createElement('figure');
-    figure.className = 'container-fluid';
+    figure.className = 'container';
     section.appendChild(figure);
     const imageHolder = document.createElement('img');
     imageHolder.src = data['cover_url'];
@@ -134,19 +109,18 @@ function renderData(data) {
             }         
     })
     figure.appendChild(boxOffice);
-    figure.appendChild(releaseDate);
-    figure.appendChild(increaseBoxOffice);    
-    
+    figure.appendChild(increaseBoxOffice);
+    figure.appendChild(releaseDate);        
     const details = document.createElement('details');
     const summary = document.createElement('summary');
-    summary.textContent = 'Storyline';
-    summary.className = '';
+    details.className = 'btn1';
+    summary.className = 'btn2';
+    summary.textContent = 'Storyline:';
     details.textContent = data.overview;
     details.appendChild(summary);
     figure.appendChild(details);
-
     const trailer = document.createElement('button')
-    trailer.className = 'btn1';
+    trailer.className = 'btn';
     figure.appendChild(trailer)
     trailer.textContent = 'Play trailer';
     trailer.addEventListener('click', () => {
@@ -163,4 +137,79 @@ function renderData(data) {
             figure.appendChild(iframe);
         };                
     });
+}
+
+//Modular functions
+
+function initialize() {
+    fetch('http://localhost:3000/data/')
+    .then((resp) => resp.json())
+    .then((json) => {
+        json[0].forEach((e) => {
+            if (e.phase === null) {
+            } else {
+                movieList.push(e);
+            };
+        });
+        movieList.forEach((e) => {
+            renderData(e);
+        })     
+    });
+}
+
+function emptyDatabase() {
+    fetch('http://localhost:3000/data/1', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json', 
+            Accept: 'application/json'
+        }
+    })   
+}
+
+function resetDatabase() {
+    fetch('http://localhost:3000/data/1', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json', 
+            Accept: 'application/json'
+        }
+    })
+    .then(() => {
+        fetch('https://mcuapi.herokuapp.com/api/v1/movies')
+        .then((resp) => resp.json())        
+        .then((json) => {
+            fetch('http://localhost:3000/data', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json', 
+                Accept: 'application/json'
+                },
+            body: JSON.stringify(json.data)
+            })           
+        })
+    })
+}
+
+function handleDropdown() {
+    document.querySelector('select').addEventListener('change', (change) => {
+        const phaseList = [];
+        const section = document.querySelector('section');
+        if (change.target.value === '') {
+            section.textContent = '';
+            movieList.forEach((e) => {
+                renderData(e);
+            })       
+        } else {
+            movieList.forEach((e) => {
+                if (e.phase === parseInt(change.target.value)) {
+                    phaseList.push(e)
+                }
+            });
+            section.textContent = '';
+            phaseList.forEach((e) => {
+                renderData(e);
+            });
+        }    
+    })
 }
