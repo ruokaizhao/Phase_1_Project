@@ -18,26 +18,22 @@
     //Add a button to manually reset database and retrieve and POST data
     //to the database.
 
+    //The purpose of this is that because if the database is not fresh 
+    //POST(for instance, close vs code and reopen it), it cannot be accessed 
+    //by "http://localhost:3000/data/1", so I came up with this solution. 
+    //It may be difficult to read and does not make a lot of sense, but I sure learned
+    //something from it.
+
 const movieList = [];
 document.addEventListener('DOMContentLoaded', () => {
     fetch('http://localhost:3000/data')
         .then((resp) => resp.json())        
         .then((json) => {
             if (json.length === 0) {
-                fetch('https://mcuapi.herokuapp.com/api/v1/movies')
-                .then((resp) => resp.json())        
-                .then((json) => {
-                    fetch('http://localhost:3000/data', {
-                        method: 'POST',
-                        headers: {
-                        'Content-Type': 'application/json', 
-                        Accept: 'application/json'
-                        },
-                        body: JSON.stringify(json.data)
-                    })           
-                })              
+                postDatabase();                          
             }
         })
+        //The page will be rendered after 2 seconds to allow the database to be POSTed.
         setTimeout(function() {
             initialize();    
             const reset = document.querySelector('#reset');
@@ -69,16 +65,26 @@ document.addEventListener('DOMContentLoaded', () => {
     //index.html and only define tags that change with each iteration here.
 
 function renderData(data) {
+
+    //Create a container for each movie
     const section = document.querySelector('section');
     const figure = document.createElement('figure');
     figure.className = 'container';
     section.appendChild(figure);
+
+    //Create image
     const imageHolder = document.createElement('img');
     imageHolder.src = data['cover_url'];
     imageHolder.className = 'image';
-    imageHolder.alt = data.title;  
+    imageHolder.alt = data.title;    
+    figure.appendChild(imageHolder);
+
+    //Create title
     const title = document.createElement('h4');
     title.textContent = data.title;
+    figure.appendChild(title);
+
+    //Create box office
     const boxOffice = document.createElement('p');
     if (data['box_office'] === '0') {
         boxOffice.textContent = 'Box office: Not yet released'
@@ -86,11 +92,10 @@ function renderData(data) {
         boxOffice.textContent = `Box office: $${Math.floor(parseInt(data['box_office'])/1.0e+6)} million`;
       } else {
         boxOffice.textContent = `Box office: $${Math.floor(parseInt(data['box_office'])/1.0e+9*100)/100} billion`;        
-        }  
-    const releaseDate = document.createElement('p');
-    releaseDate.textContent = `Release date: ${data['release_date']}`;
-    figure.appendChild(imageHolder);
-    figure.appendChild(title);
+        }
+    figure.appendChild(boxOffice);
+
+    //Create increase box office
     const increaseBoxOffice = document.createElement('button');
     increaseBoxOffice.className = 'btn'
     increaseBoxOffice.textContent = 'Increase box office by 10 million'
@@ -108,9 +113,14 @@ function renderData(data) {
             boxOffice.textContent = `Box office: $${Math.floor(parseInt(data['box_office'])/1.0e+9*100)/100} billion`;        
             }         
     })
-    figure.appendChild(boxOffice);
     figure.appendChild(increaseBoxOffice);
-    figure.appendChild(releaseDate);        
+
+    //Create release date
+    const releaseDate = document.createElement('p');
+    releaseDate.textContent = `Release date: ${data['release_date']}`;
+    figure.appendChild(releaseDate);
+    
+    //Create storyline
     const details = document.createElement('details');
     const summary = document.createElement('summary');
     details.className = 'btn1';
@@ -119,6 +129,8 @@ function renderData(data) {
     details.textContent = data.overview;
     details.appendChild(summary);
     figure.appendChild(details);
+
+    //Create trailer
     const trailer = document.createElement('button')
     trailer.className = 'btn';
     figure.appendChild(trailer)
@@ -140,7 +152,6 @@ function renderData(data) {
 }
 
 //Modular functions
-
 function initialize() {
     fetch('http://localhost:3000/data/')
     .then((resp) => resp.json())
@@ -157,6 +168,21 @@ function initialize() {
     });
 }
 
+function postDatabase() {
+    fetch('https://mcuapi.herokuapp.com/api/v1/movies')
+    .then((resp) => resp.json())        
+    .then((json) => {
+        fetch('http://localhost:3000/data', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json', 
+            Accept: 'application/json'
+            },
+            body: JSON.stringify(json.data)
+        })           
+    })   
+}
+
 function emptyDatabase() {
     fetch('http://localhost:3000/data/1', {
         method: 'DELETE',
@@ -168,27 +194,8 @@ function emptyDatabase() {
 }
 
 function resetDatabase() {
-    fetch('http://localhost:3000/data/1', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json', 
-            Accept: 'application/json'
-        }
-    })
-    .then(() => {
-        fetch('https://mcuapi.herokuapp.com/api/v1/movies')
-        .then((resp) => resp.json())        
-        .then((json) => {
-            fetch('http://localhost:3000/data', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json', 
-                Accept: 'application/json'
-                },
-            body: JSON.stringify(json.data)
-            })           
-        })
-    })
+    emptyDatabase();
+    setTimeout(postDatabase, 1000);
 }
 
 function handleDropdown() {
