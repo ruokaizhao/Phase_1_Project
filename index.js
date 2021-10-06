@@ -11,44 +11,10 @@
     //The incoming data is an Object with only one key/value pair,
     //the key is 'data', and value is an array of Objects.
 
-    //Reset the json-server to empty and POST the data retrieved from
-    //remote API to json-server so that the data is not duplicately added
-    //to the database.
-
-    //Add a button to manually reset database and retrieve and POST data
-    //to the database.
-
-    //The purpose of this is that because if the database is not fresh 
-    //POST(for instance, close vs code and reopen it), it cannot be accessed 
-    //by "http://localhost:3000/data/1", so I came up with this solution. 
-    //It may be difficult to read and does not make a lot of sense, but I sure learned
-    //something from it.
-
 const movieList = [];
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('http://localhost:3000/data')
-        .then((resp) => resp.json())        
-        .then((json) => {
-            if (json.length === 0) {
-                postDatabase();                          
-            }
-        })
-        //The page will be rendered after 2 seconds to allow the database to be POSTed.
-        setTimeout(function() {
-            initialize();    
-            const reset = document.querySelector('#reset');
-            reset.addEventListener('click', () => {
-                resetDatabase();
-            })          
-        }, 2000)           
-})
-
-document.addEventListener('DOMContentLoaded', () => {    
-    const empty = document.querySelector('#empty');
-    empty.addEventListener('click', () => {
-        emptyDatabase();
-    })
-})   
+    initialize();  
+}) 
 
     //Add event listener so that when a user choose a phase, the corresponding
     //movies will be shown. I was putting phaseList outside of the event listener,
@@ -133,7 +99,6 @@ function renderData(data) {
     //Create trailer
     const trailer = document.createElement('button')
     trailer.className = 'btn';
-    figure.appendChild(trailer)
     trailer.textContent = 'Play trailer';
     trailer.addEventListener('click', () => {
         if (document.querySelector(`#${data['imdb_id']}`)) {
@@ -149,14 +114,14 @@ function renderData(data) {
             figure.appendChild(iframe);
         };                
     });
+    figure.appendChild(trailer)
 }
 
-//Modular functions
 function initialize() {
-    fetch('http://localhost:3000/data/')
+    fetch('https://mcuapi.herokuapp.com/api/v1/movies')
     .then((resp) => resp.json())
     .then((json) => {
-        json[0].forEach((e) => {
+        json.data.forEach((e) => {
             if (e.phase === null) {
             } else {
                 movieList.push(e);
@@ -166,36 +131,6 @@ function initialize() {
             renderData(e);
         })     
     });
-}
-
-function postDatabase() {
-    fetch('https://mcuapi.herokuapp.com/api/v1/movies')
-    .then((resp) => resp.json())        
-    .then((json) => {
-        fetch('http://localhost:3000/data', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json', 
-            Accept: 'application/json'
-            },
-            body: JSON.stringify(json.data)
-        })           
-    })   
-}
-
-function emptyDatabase() {
-    fetch('http://localhost:3000/data/1', {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json', 
-            Accept: 'application/json'
-        }
-    })   
-}
-
-function resetDatabase() {
-    emptyDatabase();
-    setTimeout(postDatabase, 1000);
 }
 
 function handleDropdown() {
