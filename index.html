@@ -9,7 +9,15 @@
     </head>
     <body>
         <h1>Marvel Cinematic Universe</h1>
-        <span>
+        
+
+        <form id="movie-name">
+            <label for="movie">Enter the movie name you would like to see</label><br>
+            <input type="text" name="movie" id="movie" placeholder="e.g. Iron Man" />
+            <input type="submit" class="btn" id="submit" value="Start searching!" />
+        </form>
+        <br>
+        <div>
             <label for="select">Select the phase you would like to see</label>
             <select id="select" name="select">
                 <option value="">All phases</option>
@@ -17,9 +25,8 @@
                 <option value="2">Phase II</option>
                 <option value="3">Phase III</option>
                 <option value="4">Phase IV</option>
-            </select>        
-        </span>
-
+            </select>
+        </div>
 
         <section>
             

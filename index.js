@@ -23,7 +23,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     handleDropdown();
-}) 
+})
+
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('#movie-name');
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const section = document.querySelector('section');
+        let counter = 0;
+        movieList.forEach((movie) => {
+            if (movie.title === e.target.movie.value) {
+                section.textContent = '';
+                renderData(movie);
+                counter += 1;
+            };
+        });
+        if (counter === 0) {
+            alert('No matches, please check your spelling or try different keywords');
+        };
+        form.reset();
+    });
+})
 
     //If you define the section in the above code block, instead of hard
     //coding it into index.html, somehow, you cannot call section here.
