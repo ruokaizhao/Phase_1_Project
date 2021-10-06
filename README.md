@@ -1,10 +1,8 @@
 Phase-1 Project
 
-When the page loaded, it will retrieve data from local json-server and render the information to the page.
+When the page loaded, it will retrieve data a public API and render the information to the page.
 
 On the top of the page, there is a drop down menu with options of "All phases, phase I to IV", after choosing one specific phase, the page will be re-rendered to only show movies belong to that phase.
-
-Beneath the drop down menu, there is a "Reset database" button, which when clicked, will empty the local json-server, and then fetch the same data from a remote public API, and re-POST the data to the local json-server.
 
 The information is categorized by movie titles, with title, box office, release date.
 
