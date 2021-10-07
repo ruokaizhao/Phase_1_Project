@@ -1,25 +1,7 @@
-    //Render the page using data from the json-server
-
-    //There are some movies which have no accurate data, so I will be
-    //better off exclude those movies to make the page look nice.
-    //Also, without removing those data, I will get 
-    //"GET file://wsl%24/Ubuntu/home/ruokai/Development/my-projects/phase-1-project/null 
-    //net::ERR_FILE_NOT_FOUND" error message, don't know the reason,
-    //maybe it's just the code is telling me that "cannot retrieve some 
-    //data from remote API.
-
-    //The incoming data is an Object with only one key/value pair,
-    //the key is 'data', and value is an array of Objects.
-
 const movieList = [];
 document.addEventListener('DOMContentLoaded', () => {
     initialize();  
 }) 
-
-    //Add event listener so that when a user choose a phase, the corresponding
-    //movies will be shown. I was putting phaseList outside of the event listener,
-    //which cause the phaseList array not resetting, and data got piled up,
-    //which result in not filtering the correct movies.
 
 document.addEventListener('DOMContentLoaded', () => {
     handleDropdown();
@@ -45,32 +27,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 })
 
-    //If you define the section in the above code block, instead of hard
-    //coding it into index.html, somehow, you cannot call section here.
-    //So for now, you better hard code the basic structure of html in
-    //index.html and only define tags that change with each iteration here.
-
 function renderData(data) {
 
-    //Create a container for each movie
     const section = document.querySelector('section');
     const figure = document.createElement('figure');
     figure.className = 'container';
     section.appendChild(figure);
 
-    //Create image
     const imageHolder = document.createElement('img');
     imageHolder.src = data['cover_url'];
     imageHolder.className = 'image';
     imageHolder.alt = data.title;    
     figure.appendChild(imageHolder);
 
-    //Create title
     const title = document.createElement('h4');
     title.textContent = data.title;
     figure.appendChild(title);
 
-    //Create box office
     const boxOffice = document.createElement('p');
     if (data['box_office'] === '0') {
         boxOffice.textContent = 'Box office: Not yet released'
@@ -81,7 +54,6 @@ function renderData(data) {
         }
     figure.appendChild(boxOffice);
 
-    //Create increase box office
     const increaseBoxOffice = document.createElement('button');
     increaseBoxOffice.className = 'btn'
     increaseBoxOffice.textContent = 'Increase box office by 10 million'
@@ -101,12 +73,10 @@ function renderData(data) {
     })
     figure.appendChild(increaseBoxOffice);
 
-    //Create release date
     const releaseDate = document.createElement('p');
     releaseDate.textContent = `Release date: ${data['release_date']}`;
     figure.appendChild(releaseDate);
     
-    //Create storyline
     const details = document.createElement('details');
     const summary = document.createElement('summary');
     details.className = 'btn1';
@@ -116,7 +86,6 @@ function renderData(data) {
     details.appendChild(summary);
     figure.appendChild(details);
 
-    //Create trailer
     const trailer = document.createElement('button')
     trailer.className = 'btn';
     trailer.textContent = 'Play trailer';
@@ -142,8 +111,7 @@ function initialize() {
     .then((resp) => resp.json())
     .then((json) => {
         json.data.forEach((e) => {
-            if (e.phase === null) {
-            } else {
+            if (e.phase !== null) {
                 movieList.push(e);
             };
         });
