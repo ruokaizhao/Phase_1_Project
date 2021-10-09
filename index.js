@@ -17,16 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
         let counter = 0;
         const searchingList = [];
         movieList.forEach((movie) => {
-            if (movie.title.includes(e.target.movie.value)) {
+            if (movie.title.toLowerCase().includes(e.target.movie.value.toLowerCase())) {
                 searchingList.push(movie);
                 counter += 1;
             };
         });
-        section.textContent = '';
-        searchingList.forEach((e) => renderData(e))
         if (counter === 0) {
             alert('No matches, please check your spelling or try different keywords');
-        };
+        } else {
+            section.textContent = '';
+            searchingList.forEach((e) => renderData(e))
+        }
         form.reset();
     });
 })
