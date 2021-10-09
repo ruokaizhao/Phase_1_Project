@@ -1,12 +1,4 @@
 const movieList = [];
-// document.addEventListener('DOMContentLoaded', () => {
-//     initialize();  
-// }) 
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     handleDropdown();
-// })
-
 document.addEventListener('DOMContentLoaded', () => {
     initialize();
     handleDropdown();
