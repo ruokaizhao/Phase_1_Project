@@ -1,25 +1,29 @@
 const movieList = [];
-document.addEventListener('DOMContentLoaded', () => {
-    initialize();  
-}) 
+// document.addEventListener('DOMContentLoaded', () => {
+//     initialize();  
+// }) 
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     handleDropdown();
+// })
 
 document.addEventListener('DOMContentLoaded', () => {
+    initialize();
     handleDropdown();
-})
-
-document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('#movie-name');
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         const section = document.querySelector('section');
         let counter = 0;
+        const searchingList = [];
         movieList.forEach((movie) => {
-            if (movie.title === e.target.movie.value) {
-                section.textContent = '';
-                renderData(movie);
+            if (movie.title.includes(e.target.movie.value)) {
+                searchingList.push(movie);
                 counter += 1;
             };
         });
+        section.textContent = '';
+        searchingList.forEach((e) => renderData(e))
         if (counter === 0) {
             alert('No matches, please check your spelling or try different keywords');
         };
@@ -119,7 +123,7 @@ function initialize() {
             renderData(e);
         })     
     });
-}
+ }
 
 function handleDropdown() {
     document.querySelector('select').addEventListener('change', (change) => {
